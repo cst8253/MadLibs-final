@@ -1,0 +1,120 @@
+﻿@page "/lunch-room"
+@rendermode InteractiveServer
+
+<PageTitle>Lunch Room</PageTitle>
+<MadLibTitle>Lunch Room</MadLibTitle>
+
+<EditForm 
+  class="bg-light border border-1 p-5 mb-5" 
+  Model="Words" 
+  FormName="MissionStatementForm"
+  OnValidSubmit="ShowStory">
+  <DataAnnotationsValidator />
+
+  <div class="form-group mb-3">
+    <label for="Container" class="form-label">Container</label>
+    <InputText 
+      class="form-control" 
+      id="Container" 
+      @bind-Value="Words.Container" />
+    <ValidationMessage For="() => Words.Container" />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="Noun" class="form-label">Noun</label>
+    <InputText 
+      class="form-control" 
+      id="Noun" 
+      @bind-Value="Words.Noun" />
+    <ValidationMessage For="() => Words.Noun" />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="Adjective1" class="form-label">Adjective 1</label>
+    <InputText 
+      class="form-control" 
+      id="Adjective1" 
+      @bind-Value="Words.Adjective1" />
+    <ValidationMessage For="() => Words.Adjective1" />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="Adjective2" class="form-label">Adjective 2</label>
+    <InputText 
+      class="form-control" 
+      id="Adjective2" 
+      @bind-Value="Words.Adjective2" />
+    <ValidationMessage For="() => Words.Adjective2" />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="Vegetable1" class="form-label">Vegetable 1</label>
+    <InputText 
+      class="form-control" 
+      id="Vegetable1" 
+      @bind-Value="Words.Vegetable1" />
+    <ValidationMessage For="() => Words.Vegetable1" />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="Vegetable2" class="form-label">Vegetable 2</label>
+    <InputText 
+      class="form-control" 
+      id="Vegetable2" 
+      @bind-Value="Words.Vegetable2" />
+    <ValidationMessage For="() => Words.Vegetable2" />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="Animal" class="form-label">Animal</label>
+    <InputText 
+      class="form-control" 
+      id="Animal" 
+      @bind-Value="Words.Animal" />
+    <ValidationMessage For="() => Words.Animal" />
+  </div>
+
+  <button class="btn btn-primary">Read Story</button>
+</EditForm>
+
+<Dialog IsOpen="isOpen" CloseCallback="CloseStory">
+  <p>Make sure your lunch <strong>@Words.Container</strong> is filled with <strong>@Words.Adjective1</strong> food. Do not go to the <strong>@Words.Adjective2</strong> food stand across the street from the school. The hamburgers they serve are fried in <strong>@Words.Noun</strong> and are made of <strong>@Words.Animal</strong> meat. So take a sandwich made of <strong>@Words.Vegetable1</strong> or <strong>@Words.Vegetable2</strong>. It's much healthier!</p>
+</Dialog>
+
+@code {
+private class WordsModel {
+    [Required(ErrorMessage="Please provide a word.")]
+    public string? Container { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    
+    public string? Noun { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    public string? Adjective1 { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    [NotEqual("Adjective1", ErrorMessage="Please provide a different word.")]
+    public string? Adjective2 { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    public string? Vegetable1 { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    [NotEqual("Vegetable1", ErrorMessage="Please provide a different word.")]
+    public string? Vegetable2 { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    public string? Animal { get; set; }
+  }
+
+  [SupplyParameterFromForm]
+  private WordsModel Words { get; set; } = new(); 
+
+  private bool isOpen = false;
+
+  private void ShowStory () 
+  {
+    isOpen = true;
+  }
+
+  private void CloseStory ()
+  {
+    isOpen = false;
+    Words = new();
+  }
+}

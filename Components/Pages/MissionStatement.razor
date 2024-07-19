@@ -1,43 +1,104 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
 <PageTitle>Mission Statement</PageTitle>
 
 <MadLibTitle>Mission Statement</MadLibTitle>
 
-<form class="bg-light border border-1 p-5 mb-5">
+<EditForm 
+  class="bg-light border border-1 p-5 mb-5" 
+  Model="Words" 
+  FormName="MissionStatementForm"
+  OnValidSubmit="ShowStory">
+  <DataAnnotationsValidator />
   <div class="form-group mb-3">
     <label for="Verb1" class="form-label">Verb 1</label>
-    <input class="form-control" id="Verb1"  />
+    <InputText 
+      class="form-control" 
+      id="Verb1" 
+      @bind-Value="Words.Verb1" />
+    <ValidationMessage For="() => Words.Verb1" />
   </div>
 
   <div class="form-group mb-3">
     <label for="Verb2" class="form-label">Verb 2</label>
-    <input class="form-control" id="Verb2" />
+    <InputText 
+      class="form-control" 
+      id="Verb2" 
+      @bind-Value="Words.Verb2" />
+    <ValidationMessage For="() => Words.Verb2" />
   </div>
 
   <div class="form-group mb-3">
     <label for="Adjective" class="form-label">Adjective</label>
-    <input class="form-control" id="Adjective" />
+    <InputText 
+      class="form-control" 
+      id="Adjective" 
+      @bind-Value="Words.Adjective" />
   </div>
 
   <div class="form-group mb-3">
     <label for="PluralNoun1" class="form-label">Plural Noun 1</label>
-    <input class="form-control" id="PluralNoun1" />
+    <InputText 
+      class="form-control" 
+      id="PluralNoun1" 
+      @bind-Value="Words.PluralNoun1" />
   </div>
 
   <div class="form-group mb-3">
     <label for="PluralNoun2" class="form-label">Plural Noun 2</label>
-    <input class="form-control" id="PluralNoun2" />
+    <InputText 
+      class="form-control" 
+      id="PluralNoun2" 
+      @bind-Value="Words.PluralNoun2" />
   </div>
 
   <div class="form-group mb-3">
     <label for="PluralNoun3" class="form-label">Plural Noun 3</label>
-    <input class="form-control" id="PluralNoun3" />
+    <InputText 
+      class="form-control" 
+      id="PluralNoun3" 
+      @bind-Value="Words.PluralNoun3" />
   </div>
   
   <button class="btn btn-primary">Read Story</button>
-</form>
+</EditForm>
+
+<Dialog IsOpen="isOpen" CloseCallback="CloseStory">
+  <p>Our mission is to <strong>@Words.Verb1</strong> our <strong>@Words.PluralNoun1</strong> with <strong>@Words.Adjective</strong> <strong>@Words.PluralNoun2</strong> that will <strong>@Words.Verb2</strong> their <strong>@Words.PluralNoun3.</strong></p>
+</Dialog>
 
 @code {
 
+  private class WordsModel {
+    [Required(ErrorMessage="Please provide a word.")]
+    public string? Verb1 { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    [NotEqual("Verb1", ErrorMessage="Please provide a different word.")]
+    public string? Verb2 { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    public string? Adjective { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    public string? PluralNoun1 { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    public string? PluralNoun2 { get; set; }
+    [Required(ErrorMessage="Please provide a word.")]
+    public string? PluralNoun3 { get; set; }
+  }
+
+  [SupplyParameterFromForm]
+  private WordsModel Words { get; set; } = new(); 
+
+  private bool isOpen = false;
+
+  private void ShowStory () 
+  {
+    isOpen = true;
+  }
+
+  private void CloseStory ()
+  {
+    isOpen = false;
+    Words = new();
+  }
 }
